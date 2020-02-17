@@ -85,17 +85,27 @@ def whereis(afile):
     except subprocess.CalledProcessError:
         return None
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Merge branch 'develop' into master (#527)
 def find(afile):
     """
         As whereis look only for executable on linux, this find look for all file type
     """
+<<<<<<< HEAD
     for d in os.environ['PATH'].split(PATH_DELIM):
+=======
+    for d in os.environ['PATH'].split(path_delim):
+>>>>>>> Merge branch 'develop' into master (#527)
         if os.path.isfile(os.path.join(d, afile)):
             return d
     return None
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Merge branch 'develop' into master (#527)
 # Try to find openMVG and openMVS binaries in PATH
 OPENMVG_BIN = whereis("openMVG_main_SfMInit_ImageListing")
 OPENMVS_BIN = whereis("ReconstructMesh")
@@ -121,11 +131,18 @@ PRESET = {'SEQUENTIAL': [0, 1, 2, 3, 9, 10, 11, 12, 13],
 
 PRESET_DEFAULT = 'SEQUENTIAL'
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Merge branch 'develop' into master (#527)
 # HELPERS for terminal colors
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 NO_EFFECT, BOLD, UNDERLINE, BLINK, INVERSE, HIDDEN = (0, 1, 4, 5, 7, 8)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Merge branch 'develop' into master (#527)
 # from Python cookbook, #475186
 def has_colours(stream):
     '''
@@ -167,7 +184,10 @@ class ConfContainer:
 
 
 class AStep:
+<<<<<<< HEAD
     """ Represents a process step to be run """
+=======
+>>>>>>> Merge branch 'develop' into master (#527)
     def __init__(self, info, cmd, opt):
         self.info = info
         self.cmd = cmd
@@ -175,7 +195,10 @@ class AStep:
 
 
 class StepsStore:
+<<<<<<< HEAD
     """ List of steps with facilities to configure them """
+=======
+>>>>>>> Merge branch 'develop' into master (#527)
     def __init__(self):
         self.steps_data = [
             ["Intrinsics analysis",          # 0
@@ -183,10 +206,17 @@ class StepsStore:
              ["-i", "%input_dir%", "-o", "%matches_dir%", "-d", "%camera_file_params%"]],
             ["Compute features",             # 1
              os.path.join(OPENMVG_BIN, "openMVG_main_ComputeFeatures"),
+<<<<<<< HEAD
              ["-i", "%matches_dir%/sfm_data.json", "-o", "%matches_dir%", "-m", "SIFT"]],
             ["Compute matches",              # 2
              os.path.join(OPENMVG_BIN, "openMVG_main_ComputeMatches"),
              ["-i", "%matches_dir%/sfm_data.json", "-o", "%matches_dir%", "-n", "AUTO"]],
+=======
+             ["-i", "%matches_dir%/sfm_data.json", "-o", "%matches_dir%", "-m", "SIFT", "-n", "4"]],
+            ["Compute matches",              # 2
+             os.path.join(OPENMVG_BIN, "openMVG_main_ComputeMatches"),
+             ["-i", "%matches_dir%/sfm_data.json", "-o", "%matches_dir%", "-n", "HNSWL2", "-r", ".8"]],
+>>>>>>> Merge branch 'develop' into master (#527)
             ["Incremental reconstruction",   # 3
              os.path.join(OPENMVG_BIN, "openMVG_main_IncrementalSfM"),
              ["-i", "%matches_dir%/sfm_data.json", "-m", "%matches_dir%", "-o", "%reconstruction_dir%"]],
@@ -253,11 +283,16 @@ CONF = ConfContainer()
 STEPS = StepsStore()
 
 # ARGS
+<<<<<<< HEAD
 PARSER = argparse.ArgumentParser(
+=======
+parser = argparse.ArgumentParser(
+>>>>>>> Merge branch 'develop' into master (#527)
     formatter_class=argparse.RawTextHelpFormatter,
     description="Photogrammetry reconstruction with these steps: \r\n" +
     "\r\n".join(("\t%i. %s\t %s" % (t, STEPS[t].info, STEPS[t].cmd) for t in range(STEPS.length())))
     )
+<<<<<<< HEAD
 PARSER.add_argument('input_dir',
                     help="the directory wich contains the pictures set.")
 PARSER.add_argument('output_dir',
@@ -267,16 +302,35 @@ PARSER.add_argument('--steps',
                     nargs="+",
                     help="steps to process")
 PARSER.add_argument('--preset',
+=======
+parser.add_argument('input_dir',
+                    help="the directory wich contains the pictures set.")
+parser.add_argument('output_dir',
+                    help="the directory wich will contain the resulting files.")
+parser.add_argument('--steps',
+                    type=int,
+                    nargs="+",
+                    help="steps to process")
+parser.add_argument('--preset',
+>>>>>>> Merge branch 'develop' into master (#527)
                     help="steps list preset in \r\n" +
                     " \r\n".join([k + " = " + str(PRESET[k]) for k in PRESET]) +
                     " \r\ndefault : " + PRESET_DEFAULT)
 
+<<<<<<< HEAD
 GROUP = PARSER.add_argument_group('Passthrough', description="Option to be passed to command lines (remove - in front of option names)\r\ne.g. --1 p ULTRA to use the ULTRA preset in openMVG_main_ComputeFeatures")
 for n in range(STEPS.length()):
     GROUP.add_argument('--'+str(n), nargs='+')
 
 PARSER.parse_args(namespace=CONF)  # store args in the ConfContainer
 
+=======
+group = parser.add_argument_group('Passthrough', description="Option to be passed to command lines (remove - in front of option names)\r\ne.g. --1 p ULTRA to use the ULTRA preset in openMVG_main_ComputeFeatures")
+for n in range(STEPS.length()):
+    group.add_argument('--'+str(n), nargs='+')
+
+parser.parse_args(namespace=CONF)  # store args in the ConfContainer
+>>>>>>> Merge branch 'develop' into master (#527)
 
 # FOLDERS
 
@@ -285,7 +339,10 @@ def mkdir_ine(dirname):
     if not os.path.exists(dirname):
         os.mkdir(dirname)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Merge branch 'develop' into master (#527)
 # Absolute path for input and ouput dirs
 CONF.input_dir = os.path.abspath(CONF.input_dir)
 CONF.output_dir = os.path.abspath(CONF.output_dir)
