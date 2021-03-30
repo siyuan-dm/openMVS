@@ -10,10 +10,10 @@ RUN apt-get install -yq
 RUN apt-get -y install git mercurial cmake libpng-dev libjpeg-dev libtiff-dev libglu1-mesa-dev
 
 # Eigen (Known issues with eigen 3.3.7 as of 12/10/2019, so using this tested branch/commit instead) 
-RUN git clone https://gitlab.com/libeigen/eigen --branch 3.2 ed5cd0a4d16e12daa1bef608628c103e67969d63
+RUN git clone https://gitlab.com/libeigen/eigen eigen --branch 3.2 
 RUN mkdir eigen_build
 RUN cd eigen_build &&\
-	cmake . ../eigen &&\
+	cmake ../eigen &&\
 	make && make install &&\
 	cd ..
 
@@ -30,10 +30,10 @@ RUN apt-get -y install libcgal-dev libcgal-qt5-dev
 RUN git clone https://github.com/cdcseacave/VCG.git vcglib
 
 # Build from stable release openMVS1.0
-RUN git clone https://github.com/cdcseacave/openMVS.git --branch v1.0
+# RUN git clone https://github.com/cdcseacave/openMVS.git --branch v1.0
 
 # Uncomment below (and comment above) to use the latest commit from the master branch
-# RUN git clone https://github.com/cdcseacave/openMVS.git openMVS
+RUN git clone https://github.com/cdcseacave/openMVS.git openMVS
 
 RUN mkdir openMVS_build
 RUN cd openMVS_build &&\
@@ -44,3 +44,43 @@ RUN cd openMVS_build &&\
 	make -j4 &&\
 	make install
 ENV PATH /usr/local/bin/OpenMVS:$PATH
+
+# Add openMVG binaries to path
+ENV PATH $PATH:/openMVG_Build/install/bin
+
+# Get dependencies
+RUN apt-get update && apt-get install -y \
+  cmake \
+  build-essential \
+  graphviz \
+  git \
+  coinor-libclp-dev \
+  libceres-dev \
+  libflann-dev \
+  liblemon-dev \
+  libjpeg-dev \
+  libpng-dev \
+  libtiff-dev \
+  python-minimal; \
+  apt-get autoclean && apt-get clean
+
+# Clone the openvMVG repo
+RUN git clone https://github.com/openMVG/openMVG.git openMVG
+RUN cd openMVG && git submodule update --init --recursive
+
+# Build
+RUN mkdir /openMVG_Build; \
+  cd /openMVG_Build; \
+  cmake -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_INSTALL_PREFIX="/openMVG_Build/install" \
+    -DOpenMVG_BUILD_TESTS=ON \
+    -DOpenMVG_BUILD_EXAMPLES=OFF \
+    -DFLANN_INCLUDE_DIR_HINTS=/usr/include/flann \
+    -DLEMON_INCLUDE_DIR_HINTS=/usr/include/lemon \
+    -DCOINUTILS_INCLUDE_DIR_HINTS=/usr/include \
+    -DCLP_INCLUDE_DIR_HINTS=/usr/include \
+    -DOSI_INCLUDE_DIR_HINTS=/usr/include \
+    ../openMVG/src; \
+    make -j 8
+
+RUN cd /openMVG_Build && make test && make install
