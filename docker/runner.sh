@@ -1,0 +1,1 @@
+python3 openMVS/MvgMvsPipeline.py working/output_data/alpha/20210204T104527+0800_jingmao-test/rawimage/camera_front/ working/output_data/alpha/20210204T104527+0800_jingmao-test/ --steps 10 --0 k "1327.8;0;1004.29;0;1327.5;466.66;0;0;1" c 1 d /openMVG/src/openMVG/exif/sensor_width_database/sensor_width_camera_database.txt --1 numThreads 100 --10 sub-scene-area 660000
